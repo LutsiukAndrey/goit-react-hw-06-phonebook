@@ -2,26 +2,26 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 export const ContactList = ({ data, delateContact }) => {
-  console.log(data);
   const onDeleteBtn = event => {
     delateContact(event.currentTarget.id);
   };
 
-  // if (data.length > 0) {
-  return (
-    <ul>
-      {data.map(({ id, name, number }) => {
-        return (
-          <ContactItem key={id}>
-            {name} : {number}
-            <DeleteBtn id={id} type="button" onClick={onDeleteBtn}>
-              delete
-            </DeleteBtn>
-          </ContactItem>
-        );
-      })}
-    </ul>
-  );
+  if (data.length > 0) {
+    return (
+      <ul>
+        {data.map(({ id, name, number }) => {
+          return (
+            <ContactItem key={id}>
+              {name} : {number}
+              <DeleteBtn id={id} type="button" onClick={onDeleteBtn}>
+                delete
+              </DeleteBtn>
+            </ContactItem>
+          );
+        })}
+      </ul>
+    );
+  }
 };
 
 ContactList.propTypes = {

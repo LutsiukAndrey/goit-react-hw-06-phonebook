@@ -34,6 +34,7 @@ const App = () => {
   const filteredContact = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter)
   );
+
   return (
     <Container>
       <h1>Phonebook</h1>

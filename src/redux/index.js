@@ -14,15 +14,18 @@ export const initialState = {
 export const contactReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD: {
-      return (state = { contacts: [...state.contacts, action.payload] });
+      return (state = {
+        contacts: [...state.contacts, action.payload],
+        filter: '',
+      });
     }
     case DELETE: {
       return (state = {
         contacts: [...state.contacts.filter(el => el.id !== action.payload)],
+        filter: '',
       });
     }
     case FILTER: {
-      console.log(action.payload);
       return {
         ...state,
 
