@@ -1,4 +1,10 @@
-import React from 'react';
+// import React from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { addContact, deleteContact, filterContact } from 'redux/sliceContacts';
+// import { ContactList } from './ContactList/ContactList';
+// import Container from './Container/Container';
+// import Filter from './Filter/Filter';
+// import { Form } from './Form/Form';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form } from './Form/Form';
 import { ContactList } from './ContactList/ContactList';
