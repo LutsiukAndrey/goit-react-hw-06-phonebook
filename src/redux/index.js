@@ -1,57 +1,63 @@
-import { createStore } from 'redux';
-const FILTER = 'FILTER';
-const DELETE = 'DELETE';
-const ADD = 'ADD';
-export const initialState = {
-  contacts: [
-    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ],
-  filter: '',
-};
-export const contactReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD: {
-      return (state = {
-        contacts: [...state.contacts, action.payload],
-        filter: '',
-      });
-    }
-    case DELETE: {
-      return (state = {
-        contacts: [...state.contacts.filter(el => el.id !== action.payload)],
-        filter: '',
-      });
-    }
-    case FILTER: {
-      return {
-        ...state,
+import { combineReducers, configureStore, createSlice } from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
-        filter: action.payload,
-      };
-    }
-    default:
-      return state;
-  }
+const persistConfig = {
+  key: 'contacts',
+  storage,
 };
 
-// store
-export const store = createStore(
-  contactReducer,
-  initialState,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+export const contactSlice = createSlice({
+  name: 'contacts',
+  initialState: {
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
+  },
+  reducers: {
+    addContact(state, action) {
+      state.contacts.push(action.payload);
+    },
+    deleteContact(state, action) {
+      return state.contacts.filter(el => el.id !== action.payload);
+    },
+    filterContact(state, action) {
+      state.filter = action.payload;
+    },
+  },
+});
 
-//actionsCeator
-export const addContact = contactItem => {
-  return { type: ADD, payload: contactItem };
-};
+export const { addContact, filterContact, deleteContact } =
+  contactSlice.actions;
 
-export const deleteContact = id => {
-  return { type: DELETE, payload: id };
-};
-export const filterContact = value => {
-  return { type: FILTER, payload: value.toLowerCase() };
-};
+export const contactReducer = contactSlice.reducer;
+
+const persistedReducer = persistReducer(persistConfig, contactReducer);
+export const rootReducer = combineReducers({
+  contacts: contactReducer,
+});
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);
