@@ -1,9 +1,18 @@
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'redux/sliceContacts';
 import styled from 'styled-components';
 
-export const ContactList = ({ data, delateContact }) => {
+export const ContactList = () => {
+  const dispatch = useDispatch();
+
+  const { contacts, filter } = useSelector(state => state);
+
+  const data = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter)
+  );
+
   const onDeleteBtn = event => {
-    delateContact(event.currentTarget.id);
+    dispatch(deleteContact(event.currentTarget.id));
   };
 
   if (data.length > 0) {
@@ -22,17 +31,6 @@ export const ContactList = ({ data, delateContact }) => {
       </ul>
     );
   }
-};
-
-ContactList.propTypes = {
-  delateContact: PropTypes.func,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
 };
 
 const ContactItem = styled.li`
